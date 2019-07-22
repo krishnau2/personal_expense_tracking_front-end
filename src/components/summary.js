@@ -1,43 +1,18 @@
 import React, { Component } from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
-import Avatar from "@material-ui/core/Avatar";
 
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import BankAccountIcon from "@material-ui/icons/AccountBalance";
-import CashAccountIcon from "@material-ui/icons/AccountBalanceWallet";
-import BudgetIcon from "@material-ui/icons/Work";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import SettingsIcon from "@material-ui/icons/Settings";
-
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import DrawerNavigation from "./Common/DrawerNavigation";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
-  },
-  drawerPaper: {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
   },
 
   appBarSpacer: theme.mixins.toolbar,
@@ -60,15 +35,6 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 240
-  },
-  listItemIconRoot: {
-    color: "#fff"
-  },
-  item: {
-    background: "#2757ae",
-    "&:hover": {
-      background: "rgb(210, 112, 175)"
-    }
   }
 }));
 
@@ -77,57 +43,7 @@ export default function Summary() {
 
   return (
     <div className="summary-container">
-      <Drawer
-        variant="permanent"
-        classes={{ paper: classes.paper }}
-        className={`${classes.drawerPaper}`}
-      >
-        <Divider />
-        <List>
-          <ListItem button classes={{ root: classes.item }}>
-            <ListItemIcon
-              classes={{
-                root: classes.listItemIconRoot
-              }}
-            >
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Summary" />
-          </ListItem>
-          <ListItem button classes={{ root: classes.item }}>
-            <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
-              <BankAccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="Bank Accounts" />
-          </ListItem>
-          <ListItem button classes={{ root: classes.item }}>
-            <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
-              <CashAccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="Cash Accounts" />
-          </ListItem>
-          <ListItem button classes={{ root: classes.item }}>
-            <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
-              <BudgetIcon />
-            </ListItemIcon>
-            <ListItemText primary="Budget" />
-          </ListItem>
-          <ListItem button classes={{ root: classes.item }}>
-            <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
-              <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reports" />
-          </ListItem>
-          <ListItem button classes={{ root: classes.item }}>
-            <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
-        </List>
-        <Divider />
-        <Avatar>KK</Avatar>
-      </Drawer>
+      <DrawerNavigation />
       <main className={classes.content}>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
