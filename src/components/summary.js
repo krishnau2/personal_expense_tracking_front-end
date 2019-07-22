@@ -17,6 +17,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import BankAccountIcon from "@material-ui/icons/AccountBalance";
 import CashAccountIcon from "@material-ui/icons/AccountBalanceWallet";
+import BudgetIcon from "@material-ui/icons/Work";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import SettingsIcon from "@material-ui/icons/Settings";
 
@@ -104,6 +105,12 @@ export default function Summary() {
               <CashAccountIcon />
             </ListItemIcon>
             <ListItemText primary="Cash Accounts" />
+          </ListItem>
+          <ListItem button classes={{ root: classes.item }}>
+            <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
+              <BudgetIcon />
+            </ListItemIcon>
+            <ListItemText primary="Budget" />
           </ListItem>
           <ListItem button classes={{ root: classes.item }}>
             <ListItemIcon classes={{ root: classes.listItemIconRoot }}>
