@@ -43,9 +43,6 @@ export default function DrawerNavigation() {
   const drawerWidth = 240;
 
   const useStyles = makeStyles(theme => ({
-    root: {
-      display: "flex"
-    },
     drawerPaper: {
       position: "relative",
       whiteSpace: "nowrap",
@@ -56,16 +53,6 @@ export default function DrawerNavigation() {
       })
     },
 
-    appBarSpacer: theme.mixins.toolbar,
-    content: {
-      flexGrow: 1,
-      height: "100vh",
-      overflow: "auto"
-    },
-    container: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4)
-    },
     paper: {
       background: "#2757ae",
       color: "#fff",
@@ -74,9 +61,7 @@ export default function DrawerNavigation() {
       overflow: "auto",
       flexDirection: "column"
     },
-    fixedHeight: {
-      height: 240
-    },
+
     listItemIconRoot: {
       color: "#fff"
     },
