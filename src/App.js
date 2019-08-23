@@ -20,6 +20,10 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto"
+  },
+  button: {
+    margin: theme.spacing(1),
+    textTransform: "none"
   }
 }));
 
@@ -31,16 +35,28 @@ function App() {
       <CssBaseline />
       <DrawerNavigation />
       <main className={classes.content}>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          component="a"
-          href="/new_transaction"
-        >
-          <AddIcon />
-          New Transaction
-        </Button>
+        <div className="action-button-wrap">
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            component="a"
+            href="/transactions/expense"
+          >
+            <AddIcon />
+            Add Expense
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            component="a"
+            href="/transactions/income"
+          >
+            <AddIcon />
+            Add Income
+          </Button>
+        </div>
         <Router>
           <div>
             <Route exact path="/" component={Summary} />
@@ -49,7 +65,7 @@ function App() {
             <Route path="/budget" component={Budget} />
             <Route path="/reports" component={Reports} />
             <Route path="/settings" component={Settings} />
-            <Route path="/new_transaction" component={Transaction} />
+            <Route exact path="/transactions/:type" component={Transaction} />
           </div>
         </Router>
       </main>

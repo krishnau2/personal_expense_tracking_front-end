@@ -5,3 +5,20 @@
 .content {
   flex-grow: 1;
 }
+
+.action-button-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.form-section {
+  width: 900px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.section-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+}

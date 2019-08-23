@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import NoSsr from "@material-ui/core/NoSsr";
 import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
+import AccountSelect from "./components/AccountSelect";
+import TransactionRow from "./components/TransactionRows";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -8,90 +12,65 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Transactions() {
+const accountsList = accounts => {
+  return accounts.map(account => ({
+    value: account.id,
+    label: account.name
+  }));
+};
+
+export default function Transactions(props) {
   const classes = useStyles();
   const [accounts, setAccounts] = useState([]);
+  const [transactionRowData, setTransactionRowData] = useState([{}, {}, {}]);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/accounts.json");
       const data = await response.json();
-      setAccounts(data);
+      let list = accountsList(data);
+      setAccounts(list);
     };
     fetchData();
   }, []);
 
+  const handleAddRow = () => {
+    setTransactionRowData([...transactionRowData, {}]);
+  };
+
+  // console.log("rows ", transactionRowData);
+  // console.log("URL params", props.match.params.type);
+
   return (
-    <div>
-      <h2>Transactions.</h2>
-      <div className="form-container">
-        <div className="form-section">
-          <div className="section-title">Transaction Type</div>
-          <div className="section-content">
+    <NoSsr>
+      <div>
+        <h2>Create {props.match.params.type} Transaction.</h2>
+        <div className="form-container">
+          <div className="form-section">
+            <div className="section-title">From Account</div>
+            <div className="section-content">
+              <AccountSelect
+                options={accounts}
+                placeholderText="Select from account"
+              />
+            </div>
+          </div>
+          <div className="form-section">
+            <div className="section-title">To Accounts</div>
+            {transactionRowData.map(row => (
+              <TransactionRow options={accounts} />
+            ))}
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.button}
+              onClick={handleAddRow}
             >
-              Expense
+              <AddIcon /> Add row
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Transfer
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Receive
-            </Button>
-          </div>
-        </div>
-        <div className="form-section">
-          <div className="section-title">Source Account</div>
-          <div className="section-content">
-            <select>
-              {accounts.map(account => (
-                <option>{account.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="form-section">
-          <div className="section-title">Destination Accounts</div>
-          <div className="section-content">
-            <select>
-              <option>Breakfast</option>
-              <option>Lunch</option>
-              <option>Petrol</option>
-            </select>
-            <input type="text" placeholder="Comments" />
-            <input type="text" placeholder="Amount" />
-          </div>
-          <div className="section-content">
-            <select>
-              <option>Breakfast</option>
-              <option>Lunch</option>
-              <option>Petrol</option>
-            </select>
-            <input type="text" placeholder="Comments" />
-            <input type="text" placeholder="Amount" />
-          </div>
-          <div className="section-content">
-            <select>
-              <option>Breakfast</option>
-              <option>Lunch</option>
-              <option>Petrol</option>
-            </select>
-            <input type="text" placeholder="Comments" />
-            <input type="text" placeholder="Amount" />
           </div>
         </div>
       </div>
-    </div>
+    </NoSsr>
   );
 }
