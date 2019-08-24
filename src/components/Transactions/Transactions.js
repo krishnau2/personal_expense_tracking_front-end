@@ -19,10 +19,21 @@ const accountsList = accounts => {
   }));
 };
 
+const defaultTransactionRows = () => {
+  let defaultRows = {};
+  for (let i = 1; i <= 3; i++) {
+    defaultRows[Date.now() + i] = { accountId: 0, note: "", amount: 0 };
+  }
+  return defaultRows;
+};
+
 export default function Transactions(props) {
   const classes = useStyles();
   const [accounts, setAccounts] = useState([]);
-  const [transactionRowData, setTransactionRowData] = useState([{}, {}, {}]);
+  const [fromAccountValue, setFromAccountValue] = useState(0);
+  const [transactionRowData, setTransactionRowData] = useState(
+    defaultTransactionRows()
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,10 +46,35 @@ export default function Transactions(props) {
   }, []);
 
   const handleAddRow = () => {
-    setTransactionRowData([...transactionRowData, {}]);
+    let newData = { ...transactionRowData };
+    newData[Date.now()] = { accountId: 0, note: "", amount: 0 };
+    setTransactionRowData(newData);
   };
 
-  // console.log("rows ", transactionRowData);
+  const handleRemoveRowClick = row => {
+    let filteredRowData = { ...transactionRowData };
+    delete filteredRowData[row];
+    setTransactionRowData(filteredRowData);
+  };
+
+  const handleFromAccountSelect = option => {
+    setFromAccountValue(option.value);
+  };
+
+  const handleAccountSelect = (row, option) => {
+    let filteredRowData = { ...transactionRowData };
+    filteredRowData[row].accountId = option.value;
+    setTransactionRowData(filteredRowData);
+  };
+
+  const handleInputFieldChange = (row, field, event) => {
+    let filteredRowData = { ...transactionRowData };
+    filteredRowData[row][field] = event.target.value;
+    setTransactionRowData(filteredRowData);
+  };
+
+  console.log("rowData ", transactionRowData);
+
   // console.log("URL params", props.match.params.type);
 
   return (
@@ -52,13 +88,22 @@ export default function Transactions(props) {
               <AccountSelect
                 options={accounts}
                 placeholderText="Select from account"
+                values={fromAccountValue}
+                onChange={handleFromAccountSelect}
               />
             </div>
           </div>
           <div className="form-section">
             <div className="section-title">To Accounts</div>
-            {transactionRowData.map(row => (
-              <TransactionRow options={accounts} />
+            {Object.keys(transactionRowData).map(key => (
+              <TransactionRow
+                options={accounts}
+                rowId={key}
+                rowValues={transactionRowData[key]}
+                handleRemoveRowClick={handleRemoveRowClick}
+                handleAccountSelect={handleAccountSelect}
+                handleInputFieldChange={handleInputFieldChange}
+              />
             ))}
             <Button
               variant="contained"

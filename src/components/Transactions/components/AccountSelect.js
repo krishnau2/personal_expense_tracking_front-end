@@ -78,12 +78,10 @@ const components = {
 
 export default function AccountSelect(props) {
   const classes = useStyles();
-  const [account, setAccount] = React.useState(null);
 
-  function handleChangeSingle(value) {
-    console.log("Auto complete handle change", value);
-    setAccount(value);
-  }
+  const findValueObjectFromOptions = () => {
+    return props.options.find(option => option.value === props.value);
+  };
 
   return (
     <div style={{ width: "300px" }}>
@@ -100,9 +98,8 @@ export default function AccountSelect(props) {
         placeholder={props.placeholderText}
         options={props.options}
         components={components}
-        value={true}
-        value={account}
-        onChange={handleChangeSingle}
+        value={findValueObjectFromOptions()}
+        onChange={val => props.onChange(val)}
       />
     </div>
   );

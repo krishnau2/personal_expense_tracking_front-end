@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
+import RemoveIcon from "@material-ui/icons/Close";
 import AccountSelect from "./AccountSelect";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,6 +29,8 @@ export default function TransactionRows(props) {
       <AccountSelect
         options={props.options}
         placeholderText="Select To account"
+        value={props.rowValues.accountId}
+        onChange={value => props.handleAccountSelect(props.rowId, value)}
       />
       <TextField
         id="standard-with-placeholder"
@@ -35,6 +38,10 @@ export default function TransactionRows(props) {
         placeholder="Notes"
         className={classes.textField}
         margin="normal"
+        value={props.rowValues.note}
+        onChange={event =>
+          props.handleInputFieldChange(props.rowId, "note", event)
+        }
       />
       <TextField
         id="standard-number"
@@ -43,7 +50,12 @@ export default function TransactionRows(props) {
         className={classes.textField}
         type="number"
         margin="normal"
+        value={props.rowValues.amount}
+        onChange={event =>
+          props.handleInputFieldChange(props.rowId, "amount", event)
+        }
       />
+      <RemoveIcon onClick={() => props.handleRemoveRowClick(props.rowId)} />
     </div>
   );
 }
