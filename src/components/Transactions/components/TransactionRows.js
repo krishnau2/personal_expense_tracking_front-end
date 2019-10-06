@@ -30,7 +30,7 @@ export default function TransactionRows(props) {
         options={props.options}
         placeholderText="Select To account"
         value={props.rowValues.accountId}
-        onChange={value => props.handleAccountSelect(props.rowId, value)}
+        onChange={value => props.handleToAccountSelect(props.rowId, value)}
       />
       <TextField
         id="standard-with-placeholder"
@@ -55,7 +55,7 @@ export default function TransactionRows(props) {
           props.handleInputFieldChange(props.rowId, "amount", event)
         }
       />
-      <RemoveIcon onClick={() => props.handleRemoveRowClick(props.rowId)} />
+      <RemoveIcon onClick={() => props.handleRemoveRow(props.rowId)} />
     </div>
   );
 }

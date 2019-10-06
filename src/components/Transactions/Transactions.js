@@ -6,40 +6,35 @@ import AddIcon from "@material-ui/icons/Add";
 import AccountSelect from "./components/AccountSelect";
 import TransactionRow from "./components/TransactionRows";
 
+import { autoCompleteOpionGenerator } from "../../helpers";
+import {
+  transactionRowDataObject,
+  defaultTransactionRowObject
+} from "../../Constants";
+
 const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1)
   }
 }));
 
-const accountsList = accounts => {
-  return accounts.map(account => ({
-    value: account.id,
-    label: account.name
-  }));
-};
-
-const defaultTransactionRows = () => {
-  let defaultRows = {};
-  for (let i = 1; i <= 3; i++) {
-    defaultRows[Date.now() + i] = { accountId: 0, note: "", amount: 0 };
-  }
-  return defaultRows;
-};
-
 export default function Transactions(props) {
   const classes = useStyles();
   const [accounts, setAccounts] = useState([]);
   const [fromAccountValue, setFromAccountValue] = useState(0);
   const [transactionRowData, setTransactionRowData] = useState(
-    defaultTransactionRows()
+    defaultTransactionRowObject()
   );
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/accounts.json");
       const data = await response.json();
-      let list = accountsList(data);
+      let list = autoCompleteOpionGenerator({
+        data: data,
+        value: "id",
+        label: "name"
+      });
       setAccounts(list);
     };
     fetchData();
@@ -47,11 +42,11 @@ export default function Transactions(props) {
 
   const handleAddRow = () => {
     let newData = { ...transactionRowData };
-    newData[Date.now()] = { accountId: 0, note: "", amount: 0 };
+    newData[Date.now()] = transactionRowDataObject();
     setTransactionRowData(newData);
   };
 
-  const handleRemoveRowClick = row => {
+  const handleRemoveRow = row => {
     let filteredRowData = { ...transactionRowData };
     delete filteredRowData[row];
     setTransactionRowData(filteredRowData);
@@ -61,7 +56,7 @@ export default function Transactions(props) {
     setFromAccountValue(option.value);
   };
 
-  const handleAccountSelect = (row, option) => {
+  const handleToAccountSelect = (row, option) => {
     let filteredRowData = { ...transactionRowData };
     filteredRowData[row].accountId = option.value;
     setTransactionRowData(filteredRowData);
@@ -73,7 +68,33 @@ export default function Transactions(props) {
     setTransactionRowData(filteredRowData);
   };
 
-  console.log("rowData ", transactionRowData);
+  const handleSubmit = () => {
+    console.log("Submit clicked.");
+    fetch("/api/v1/transactions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(generateSubmitPayload())
+    }).then(response => console.log("Form submit response ", response.json()));
+  };
+
+  const generateSubmitPayload = () => {
+    let transactionRowPayload = Object.keys(transactionRowData).map(key => ({
+      destination_account_id: transactionRowData[key].accountId,
+      amount: transactionRowData[key].amount,
+      comments: transactionRowData[key].note
+    }));
+    let payload = {
+      source_account_id: fromAccountValue,
+      transaction_type: "Expense",
+      transaction_date: "2019-08-26",
+      transactions: transactionRowPayload
+    };
+
+    return payload;
+  };
+  // console.log("rowData ", transactionRowData);
 
   // console.log("URL params", props.match.params.type);
 
@@ -100,8 +121,8 @@ export default function Transactions(props) {
                 options={accounts}
                 rowId={key}
                 rowValues={transactionRowData[key]}
-                handleRemoveRowClick={handleRemoveRowClick}
-                handleAccountSelect={handleAccountSelect}
+                handleRemoveRow={handleRemoveRow}
+                handleToAccountSelect={handleToAccountSelect}
                 handleInputFieldChange={handleInputFieldChange}
               />
             ))}
@@ -113,6 +134,18 @@ export default function Transactions(props) {
             >
               <AddIcon /> Add row
             </Button>
+          </div>
+          <div className="form-section">
+            <div className="section-content">
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+                onClick={handleSubmit}
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       </div>
