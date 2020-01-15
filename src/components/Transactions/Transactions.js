@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import NoSsr from "@material-ui/core/NoSsr";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import AccountSelect from "./components/AccountSelect";
 import TransactionRow from "./components/TransactionRows";
 
@@ -25,6 +28,7 @@ export default function Transactions(props) {
   const [transactionRowData, setTransactionRowData] = useState(
     defaultTransactionRowObject()
   );
+  const [transactionDate, setTransactionDate] = useState(new Date());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +72,10 @@ export default function Transactions(props) {
     setTransactionRowData(filteredRowData);
   };
 
+  const formatedTransactionDate = date => {
+    return moment(date).format("YYYY-MM-DD");
+  };
+
   const handleSubmit = () => {
     console.log("Submit clicked.");
     fetch("/api/v1/transactions", {
@@ -87,8 +95,7 @@ export default function Transactions(props) {
     }));
     let payload = {
       source_account_id: fromAccountValue,
-      transaction_type: "Expense",
-      transaction_date: "2019-08-26",
+      transaction_date: formatedTransactionDate(),
       transactions: transactionRowPayload
     };
 
@@ -103,6 +110,17 @@ export default function Transactions(props) {
       <div>
         <h2>Create {props.match.params.type} Transaction.</h2>
         <div className="form-container">
+          <div className="form-section">
+            <div className="section-title">Date</div>
+            <div className="section-content">
+              <DatePicker
+                dateFormat="dd/MM/yyyy"
+                selected={transactionDate}
+                todayButton="Today"
+                onChange={date => setTransactionDate(date)}
+              />
+            </div>
+          </div>
           <div className="form-section">
             <div className="section-title">From Account</div>
             <div className="section-content">
